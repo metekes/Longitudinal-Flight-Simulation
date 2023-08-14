@@ -59,7 +59,7 @@ void Plane::set_design_param(double cg_distance, double wing_distance, double ta
     I_yy = 2.0; // assumption of moment of inertia around y
     
     S_wing = 1.00; // assumption of wing area
-    S_tail = 0.20; // assumption of tail area
+    S_tail = 0.15; // assumption of tail area
     c_bar  = 0.30; // average chord length [m]
 
     h_cg = cg_distance;
@@ -84,7 +84,7 @@ void Plane::set_matrices(){
     double cm_alpha; // change in pitch moment wrt aoa
 
     // assumed parameters
-    double cm_alpha_dot = -1.1; // change in pitch moment wrt q
+    double cm_alpha_dot = -1.1; // change in pitch moment wrt q. Original formulation includes eta and epsilon -> hard to calculate
     double cm_elevator = -0.5; // change in pitch wrt elevator deflection [rad]
     double X_throttle = 1; // change in X wrt change in throttle [rad]
     double Z_elevator = -0.002; // change in Z wrt change in elevator deflectlion [rad]
@@ -110,8 +110,8 @@ void Plane::set_matrices(){
          M_u+M_w_dot*Z_u, M_w+M_w_dot*Z_w, M_q+M_w_dot*u0, 0,
          0, 0, 1, 0;
     
-    B << 0, X_throttle,
-         Z_elevator, 0,
+    B << 2, X_throttle,
+         Z_elevator, X_throttle,
          M_w_dot*Z_elevator + M_elevator, 0,
          0, 0;
 
@@ -119,6 +119,14 @@ void Plane::set_matrices(){
 
 Eigen::Matrix<double, 4, 1> Plane::get_states(){
     return states_init;
+}
+
+Eigen::Matrix<double, 4, 4> Plane::get_matrix_A(){
+    return A;
+}
+
+Eigen::Matrix<double, 4, 2> Plane::get_matrix_B(){
+    return B;
 }
 
 

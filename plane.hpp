@@ -54,8 +54,6 @@ private:
 
     double get_cD();
 
-    double get_cM_alpha();
-
     void set_design_param(double h_cg, double h_w, double h_t);
 
     void set_init_cond(double aoa, double h_0 ,double V_0, double theta_0);
@@ -65,6 +63,8 @@ public:
     Plane(double h_cg, double h_w, double h_t, double aoa, double h_0 ,double V_0, double theta_init);
 
     ///// PUBLIC METHODS ////
+    Eigen::Matrix<double, 4, 4> get_matrix_A();
+    Eigen::Matrix<double, 4, 2> get_matrix_B();
     Eigen::Matrix<double, 4, 1> get_states();
 
     Eigen::Matrix<double, 4, 1> step(double delta_elevator, double delta_thrust, double dt);

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libplane1.a  CMakeFiles/plane1.dir/plane.cpp.o
+/usr/bin/ranlib libplane1.a
