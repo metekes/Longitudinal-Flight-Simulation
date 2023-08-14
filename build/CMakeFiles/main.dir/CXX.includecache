@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/Lenovo/Desktop/JEDSY/main.cpp
+plane.hpp
+/mnt/c/Users/Lenovo/Desktop/JEDSY/plane.hpp
+iostream
+-
+fstream
+-
+math.h
+-
+iomanip
+-
+
+/mnt/c/Users/Lenovo/Desktop/JEDSY/plane.hpp
+iostream
+-
+vector
+-
+eigen3/Eigen/Dense
+-
+
