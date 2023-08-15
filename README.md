@@ -31,10 +31,14 @@ Follow these steps to compile and run your project:
     cmake .. && make
     ```
 
-3. **Run the Project:** Execute the compiled binary and move the output file to the project directory:
+3. **Run the Project:** Execute the compiled binary:
 
     ```bash
     ./main
+    ```
+4. **Move logs:** Move the output file to the project directory:
+
+    ```bash
     mv data.txt ../
     ```
 
