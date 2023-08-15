@@ -6,21 +6,22 @@
 
 Plane::Plane(double cg_distance, double wing_distance, double tail_distance, double aoa, double h_0 ,double V_0, double theta_init){
     set_env_cond();
-    set_airfoil_cond();
+    set_airfoil_cond(aoa);
     set_design_param(cg_distance, wing_distance, tail_distance);
     set_init_cond(aoa, h_0, V_0, theta_init);
-    set_forces();
+    set_forces(V_0, aoa);
     set_matrices();
-    set_forces();
 }
 
 
-double Plane::get_cL(){
-    return cL_0 + alpha * cL_alpha;
+double Plane::get_cL(double aoa){
+    set_airfoil_cond(aoa);
+    return cL_0 + aoa * cL_alpha;
 }
 
-double Plane::get_cD(){
-    return cD_0 + alpha * cD_alpha;
+double Plane::get_cD(double aoa){
+    set_airfoil_cond(aoa);
+    return cD_0 + aoa * cD_alpha;
 }
 
 void Plane::set_env_cond(){
@@ -28,27 +29,28 @@ void Plane::set_env_cond(){
     rho = 1.225; // air density [kg/m^3]
 }
 
-void Plane::set_airfoil_cond(){
+void Plane::set_airfoil_cond(double aoa){
     // for NACA2414 Re=200,000
     cL_0     = 0.232;
     cL_alpha = 6.606; 
     cD_0     = 0.01;
-    cD_alpha = 0.94*alpha - 0.018;
+    cD_alpha = 0.94*aoa - 0.018;
     cL_alpha_tail = -6.606;
 }
 
 void Plane::set_init_cond(double aoa, double h_0 ,double V_0, double theta_init){
     double theta, q0 = 0;
-    init_altitude   = h_0; // [m]
-    init_V          = V_0; // initial cruising velocity [m/s]
-    V               = V_0;
-    alpha           = aoa * M_PI / 180.0;
-    u0 = init_V * cos(alpha);
-    w0 = init_V * sin(alpha);
-    q0 = 0; // by definition of the equilibrium point
+    init_altitude    = h_0; // [m]
+    init_V           = V_0; // initial cruising velocity [m/s]
+    V                = V_0;
+
+    alpha = aoa * M_PI / 180.0;
+    u0    = init_V * cos(alpha);
+    w0    = init_V * sin(alpha);
+    q0    = 0;  // by definition of the equilibrium point
     theta = theta_init * M_PI / 180.0;
 
-    states_init << u0, w0, 0, theta;
+    states_init  << u0, w0, 0, theta;
     delta_states << 0, 0, 0, 0;
 }
 
@@ -68,10 +70,12 @@ void Plane::set_design_param(double cg_distance, double wing_distance, double ta
 
 }
 
-void Plane::set_forces(){
-    Q = 0.5 * rho * V*V; // dyanmic pressure
-    L = Q * S_tail * get_cL();
-    D = Q * S_tail * get_cD();
+void Plane::set_forces(double V, double aoa){
+    double Q_instantaneous;
+    Q_instantaneous = 0.5 * rho * V*V;
+    Q = 0.5 * rho * init_V*init_V; // initial dyanmic pressure
+    L = Q_instantaneous * S_wing * get_cL(aoa);
+    D = Q_instantaneous * S_wing * get_cD(aoa);
     W = mass * g;
     T = T_W_ratio * W;
 }
@@ -85,9 +89,9 @@ void Plane::set_matrices(){
 
     // assumed parameters
     double cm_alpha_dot = -1.1; // change in pitch moment wrt q. Original formulation includes eta and epsilon -> hard to calculate
-    double cm_elevator = -0.5; // change in pitch wrt elevator deflection [rad]
-    double X_throttle = 1; // change in X wrt change in throttle [rad]
-    double Z_elevator = -0.002; // change in Z wrt change in elevator deflectlion [rad]
+    double cm_elevator  = -0.5; // change in pitch wrt elevator deflection [rad]
+    double X_throttle   = 1; // change in X wrt change in throttle [rad]
+    double Z_elevator   = -0.002; // change in Z wrt change in elevator deflectlion [rad]
     double M_elevator; // change in Z wrt change in elevator deflectlion [rad]
     
     
@@ -121,14 +125,12 @@ Eigen::Matrix<double, 4, 1> Plane::get_states(){
     return states_init;
 }
 
-Eigen::Matrix<double, 4, 4> Plane::get_matrix_A(){
-    return A;
+Eigen::Matrix<double, 4, 1> Plane::get_forces(double V, double aoa){
+    Eigen::Matrix<double, 4, 1> forces;
+    set_forces(V, aoa);
+    forces << L, D, T, W;
+    return forces;
 }
-
-Eigen::Matrix<double, 4, 2> Plane::get_matrix_B(){
-    return B;
-}
-
 
 Eigen::Matrix<double, 4, 1> Plane::step(double delta_elevator, double delta_thrust, double dt){
     Eigen::Matrix<double, 4, 1> delta_states_derivative;

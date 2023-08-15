@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+/mnt/c/Users/Lenovo/Desktop/JEDSY/PD_controller.hpp
+
 /mnt/c/Users/Lenovo/Desktop/JEDSY/main.cpp
 plane.hpp
 /mnt/c/Users/Lenovo/Desktop/JEDSY/plane.hpp
@@ -17,6 +19,8 @@ math.h
 -
 iomanip
 -
+PD_controller.hpp
+/mnt/c/Users/Lenovo/Desktop/JEDSY/PD_controller.hpp
 
 /mnt/c/Users/Lenovo/Desktop/JEDSY/plane.hpp
 iostream

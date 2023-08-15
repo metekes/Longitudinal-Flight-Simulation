@@ -18,7 +18,6 @@ private:
     double mass, I_yy;
     double S_wing, S_tail, c_bar;
     double h_cg, h_w, h_t;
-    double V_cruise = 27;
 
     // initial conditions
     double init_altitude, init_V;
@@ -26,7 +25,7 @@ private:
     double u0, w0;
 
     // forces
-    double T_W_ratio;
+    const double T_W_ratio = 1.1;
     double L, D, W, T;
     double Q; // dynamic pressure
 
@@ -44,15 +43,15 @@ private:
     ///// PRIVATE METHODS ////
     void set_env_cond();
 
-    void set_airfoil_cond();
+    void set_airfoil_cond(double aoa);
 
-    void set_forces();
+    void set_forces(double V, double aoa);
 
     void set_matrices();
 
-    double get_cL();
+    double get_cL(double aoa);
 
-    double get_cD();
+    double get_cD(double aoa);
 
     void set_design_param(double h_cg, double h_w, double h_t);
 
@@ -63,8 +62,7 @@ public:
     Plane(double h_cg, double h_w, double h_t, double aoa, double h_0 ,double V_0, double theta_init);
 
     ///// PUBLIC METHODS ////
-    Eigen::Matrix<double, 4, 4> get_matrix_A();
-    Eigen::Matrix<double, 4, 2> get_matrix_B();
+    Eigen::Matrix<double, 4, 1> get_forces(double V, double alpha);
     Eigen::Matrix<double, 4, 1> get_states();
 
     Eigen::Matrix<double, 4, 1> step(double delta_elevator, double delta_thrust, double dt);

@@ -1,1 +1,1 @@
-/usr/lib/ccache/c++     CMakeFiles/main.dir/main.cpp.o  -o main  libplane.a 
+/usr/lib/ccache/c++     CMakeFiles/main.dir/main.cpp.o  -o main  libplane.a libcontroller.a 

@@ -124,6 +124,19 @@ main/fast:
 .PHONY : main/fast
 
 #=============================================================================
+# Target rules for targets named controller
+
+# Build rule for target.
+controller: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 controller
+.PHONY : controller
+
+# fast build rule for target.
+controller/fast:
+	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/build
+.PHONY : controller/fast
+
+#=============================================================================
 # Target rules for targets named plane
 
 # Build rule for target.
@@ -135,6 +148,33 @@ plane: cmake_check_build_system
 plane/fast:
 	$(MAKE) -f CMakeFiles/plane.dir/build.make CMakeFiles/plane.dir/build
 .PHONY : plane/fast
+
+PD_controller.o: PD_controller.cpp.o
+
+.PHONY : PD_controller.o
+
+# target to build an object file
+PD_controller.cpp.o:
+	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/PD_controller.cpp.o
+.PHONY : PD_controller.cpp.o
+
+PD_controller.i: PD_controller.cpp.i
+
+.PHONY : PD_controller.i
+
+# target to preprocess a source file
+PD_controller.cpp.i:
+	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/PD_controller.cpp.i
+.PHONY : PD_controller.cpp.i
+
+PD_controller.s: PD_controller.cpp.s
+
+.PHONY : PD_controller.s
+
+# target to generate assembly for a file
+PD_controller.cpp.s:
+	$(MAKE) -f CMakeFiles/controller.dir/build.make CMakeFiles/controller.dir/PD_controller.cpp.s
+.PHONY : PD_controller.cpp.s
 
 main.o: main.cpp.o
 
@@ -199,7 +239,11 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... controller"
 	@echo "... plane"
+	@echo "... PD_controller.o"
+	@echo "... PD_controller.i"
+	@echo "... PD_controller.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
