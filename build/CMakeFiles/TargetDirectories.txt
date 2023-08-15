@@ -1,5 +1,0 @@
-/mnt/c/Users/Lenovo/Desktop/JEDSY/build/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/Lenovo/Desktop/JEDSY/build/CMakeFiles/edit_cache.dir
-/mnt/c/Users/Lenovo/Desktop/JEDSY/build/CMakeFiles/main.dir
-/mnt/c/Users/Lenovo/Desktop/JEDSY/build/CMakeFiles/controller.dir
-/mnt/c/Users/Lenovo/Desktop/JEDSY/build/CMakeFiles/plane.dir
