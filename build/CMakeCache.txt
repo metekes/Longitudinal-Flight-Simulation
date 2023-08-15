@@ -218,18 +218,6 @@ JEDSY_BINARY_DIR:STATIC=/mnt/c/Users/Lenovo/Desktop/JEDSY/build
 //Value Computed by CMake
 JEDSY_SOURCE_DIR:STATIC=/mnt/c/Users/Lenovo/Desktop/JEDSY
 
-//Value Computed by CMake
-rgfd_BINARY_DIR:STATIC=/mnt/c/Users/Lenovo/Desktop/JEDSY/build
-
-//Value Computed by CMake
-rgfd_SOURCE_DIR:STATIC=/mnt/c/Users/Lenovo/Desktop/JEDSY
-
-//Value Computed by CMake
-rgsdbfsdljffd_BINARY_DIR:STATIC=/mnt/c/Users/Lenovo/Desktop/JEDSY/build
-
-//Value Computed by CMake
-rgsdbfsdljffd_SOURCE_DIR:STATIC=/mnt/c/Users/Lenovo/Desktop/JEDSY
-
 
 ########################
 # INTERNAL cache entries

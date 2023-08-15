@@ -1,1 +1,0 @@
-/usr/lib/ccache/c++     CMakeFiles/main1.dir/main.cpp.o  -o main1  libplane1.a 
