@@ -27,7 +27,7 @@ Follow these steps to compile and run your project:
 2. **CMake and Build:** Run CMake to generate build files, then use `make` to compile the project:
 
     ```bash
-    cd build
+    mkdir build && cd build
     cmake .. && make
     ```
 
