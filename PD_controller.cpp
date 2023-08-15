@@ -1,8 +1,11 @@
 #include "PD_controller.hpp"
 
 PD_controller::PD_controller(){
+    // initialize integral errors
     integral_err_altitude = 0;
     integral_err_velocity = 0;
+
+    // set PD coefficients
     Ki_throttle = 0.2;
     Ki_elevator = 0.0001;
     Kp_throttle = 0.5;

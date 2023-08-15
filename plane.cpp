@@ -4,6 +4,8 @@
 #include <eigen3/Eigen/Dense>
 #include <math.h>
 
+
+// constructor
 Plane::Plane(double cg_distance, double wing_distance, double tail_distance, double aoa, double h_0 ,double V_0, double theta_init){
     set_env_cond();
     set_airfoil_cond(aoa);
@@ -15,12 +17,12 @@ Plane::Plane(double cg_distance, double wing_distance, double tail_distance, dou
 
 
 double Plane::get_cL(double aoa){
-    set_airfoil_cond(aoa);
+    set_airfoil_cond(aoa); // update cL_alpha, cL, cD_alpha and cD
     return cL_0 + aoa * cL_alpha;
 }
 
 double Plane::get_cD(double aoa){
-    set_airfoil_cond(aoa);
+    set_airfoil_cond(aoa);  // update cL_alpha, cL, cD_alpha and cD
     return cD_0 + aoa * cD_alpha;
 }
 
@@ -39,40 +41,39 @@ void Plane::set_airfoil_cond(double aoa){
 }
 
 void Plane::set_init_cond(double aoa, double h_0 ,double V_0, double theta_init){
-    double theta, q0 = 0;
+    double theta, q0;
+    
     init_altitude    = h_0; // [m]
     init_V           = V_0; // initial cruising velocity [m/s]
-    V                = V_0;
 
     alpha = aoa * M_PI / 180.0;
     u0    = init_V * cos(alpha);
     w0    = init_V * sin(alpha);
     q0    = 0;  // by definition of the equilibrium point
-    theta = theta_init * M_PI / 180.0;
+    theta = theta_init * M_PI / 180.0; //deg2rad
 
-    states_init  << u0, w0, 0, theta;
-    delta_states << 0, 0, 0, 0;
+    states_init  << u0, w0, 0, theta; // assign initial states
+    delta_states << 0, 0, 0, 0; // assume no perturbation from the equlibrium point initially
 }
 
 void Plane::set_design_param(double cg_distance, double wing_distance, double tail_distance){
     double wing2cg, tail2cg;
 
-    mass = 12.0;
-    I_yy = 2.0; // assumption of moment of inertia around y
-    
-    S_wing = 1.00; // assumption of wing area
-    S_tail = 0.15; // assumption of tail area
+    mass   = 12.0; //[kg]
+    I_yy   = 2.00; // assumption of moment of inertia around y [kgm^2]
+    S_wing = 1.00; // assumption of wing area [m^2]
+    S_tail = 0.15; // assumption of tail area [m^2]
     c_bar  = 0.30; // average chord length [m]
 
-    h_cg = cg_distance;
-    h_w  = wing_distance;
-    h_t  = tail_distance;
-
+    h_cg = cg_distance;   // dsitance from nose to cg [m]
+    h_w  = wing_distance; // distance from nose to aerodynamic center of wing [m]
+    h_t  = tail_distance; // distance from nose to aerodynamic center of tail [m]
 }
 
 void Plane::set_forces(double V, double aoa){
     double Q_instantaneous;
-    Q_instantaneous = 0.5 * rho * V*V;
+    
+    Q_instantaneous = 0.5 * rho * V*V; // instantaneous dynamic pressure
     Q = 0.5 * rho * init_V*init_V; // initial dyanmic pressure
     L = Q_instantaneous * S_wing * get_cL(aoa);
     D = Q_instantaneous * S_wing * get_cD(aoa);
@@ -81,7 +82,6 @@ void Plane::set_forces(double V, double aoa){
 }
 
 void Plane::set_matrices(){
-
     double cL_u = 0, cD_u = 0; // change in cL and cD wrt u
     double X_u, X_w, Z_u, Z_w, M_u, M_w_dot, M_w, M_q;
     double cm_u = 0; // change in pitch moment wrt u
@@ -90,8 +90,9 @@ void Plane::set_matrices(){
     // assumed parameters
     double cm_alpha_dot = -1.1; // change in pitch moment wrt q. Original formulation includes eta and epsilon -> hard to calculate
     double cm_elevator  = -0.5; // change in pitch wrt elevator deflection [rad]
-    double X_throttle   = 1; // change in X wrt change in throttle [rad]
+    double X_throttle   = 1; // change in X wrt change in throttle
     double Z_elevator   = -0.002; // change in Z wrt change in elevator deflectlion [rad]
+    double X_elevator   = 2; // change in X wrt change in elevator deflectlion [rad]
     double M_elevator; // change in Z wrt change in elevator deflectlion [rad]
     
     
@@ -118,7 +119,6 @@ void Plane::set_matrices(){
          Z_elevator, X_throttle,
          M_w_dot*Z_elevator + M_elevator, 0,
          0, 0;
-
 }
 
 Eigen::Matrix<double, 4, 1> Plane::get_states(){
@@ -127,7 +127,7 @@ Eigen::Matrix<double, 4, 1> Plane::get_states(){
 
 Eigen::Matrix<double, 4, 1> Plane::get_forces(double V, double aoa){
     Eigen::Matrix<double, 4, 1> forces;
-    set_forces(V, aoa);
+    set_forces(V, aoa);  // update forces
     forces << L, D, T, W;
     return forces;
 }
@@ -135,10 +135,9 @@ Eigen::Matrix<double, 4, 1> Plane::get_forces(double V, double aoa){
 Eigen::Matrix<double, 4, 1> Plane::step(double delta_elevator, double delta_thrust, double dt){
     Eigen::Matrix<double, 4, 1> delta_states_derivative;
     Eigen::Matrix<double, 2, 1> control;
-    //delta_states << delta_u, delta_w, delta_q ,delta_theta;
+    
     control << delta_elevator, delta_thrust;
     delta_states_derivative = A*delta_states + B*control;
-    //std::cout<<B<<std::endl;
     delta_states = delta_states + delta_states_derivative *dt;
     return delta_states;
 }

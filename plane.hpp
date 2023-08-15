@@ -22,16 +22,15 @@ private:
     // initial conditions
     double init_altitude, init_V;
     double init_aoa; // in degrees
-    double u0, w0;
+    double u0, w0; // initial velocities
+    double Q; // initial dynamic pressure, to calculate aerodyanmic derivatives
 
     // forces
     const double T_W_ratio = 1.1;
     double L, D, W, T;
-    double Q; // dynamic pressure
-
+    
     // states
     double delta_u, delta_w, delta_q, delta_theta;
-    double V;
     double alpha;
 
     // state-space matirces
@@ -39,7 +38,6 @@ private:
     Eigen::Matrix<double,4,2> B;
     Eigen::Matrix<double, 4, 1> delta_states, states_init;
 
-    
     ///// PRIVATE METHODS ////
     void set_env_cond();
 
@@ -63,6 +61,7 @@ public:
 
     ///// PUBLIC METHODS ////
     Eigen::Matrix<double, 4, 1> get_forces(double V, double alpha);
+
     Eigen::Matrix<double, 4, 1> get_states();
 
     Eigen::Matrix<double, 4, 1> step(double delta_elevator, double delta_thrust, double dt);
